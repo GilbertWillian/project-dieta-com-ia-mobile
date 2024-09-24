@@ -12,6 +12,8 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import { Header } from "@/components/header"
 import { Select } from "../../components/input/select"
+import { useDataStore } from "@/store/data"
+import { router } from "expo-router"
 
 const schema = z.object({
   gender: z.string().min(1, { message: "O sexo é obrigatório" }),
@@ -29,6 +31,8 @@ export default function create() {
   } = useForm<FormData>({
     resolver: zodResolver(schema),
   })
+
+  const setPageTwo = useDataStore(state => state.setPageTwo)
 
   const genderOptions = [
     { label: "Masculino", value: "masculino" },
@@ -53,6 +57,24 @@ export default function create() {
       value: "Altamente ativo (exercícios de 5 a 7 vezes na semana)",
     },
   ]
+
+  const objectiveOptions = [
+    { label: "Emagrecer", value: "Emagrecer" },
+    { label: "Hipertrofia", value: "Hipertrofia" },
+    { label: "Hipertrofia + Definição", value: "Hipertrofia e Definição" },
+    { label: "Definição", value: "Definição" },
+  ]
+
+  function handleCreate(data:FormData) {
+    // console.log(data)
+    setPageTwo({
+      level: data.level,
+      gender: data.gender,
+      objective: data.objective,
+    })
+
+    router.push("/nutrition")
+  }
 
   return (
     <View style={styles.container}>
@@ -79,6 +101,21 @@ export default function create() {
           options={levelOptions}
         />
       </ScrollView>
+
+      <ScrollView style={styles.content}>
+        <Text style={styles.label}>Selecione seu objetivo:</Text>
+        <Select
+          control={control}
+          name="objective"
+          placeholder="Selecione seu objetivo"
+          error={errors.objective?.message}
+          options={objectiveOptions}
+        />
+      </ScrollView>
+
+      <Pressable style={ styles.button} onPress={handleSubmit(handleCreate)}>
+          <Text style={styles.buttonText}>Avançar</Text>
+        </Pressable>
     </View>
   )
 }
@@ -88,14 +125,26 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: colors.background,
   },
+  content: {
+    paddingLeft: 16,
+    paddingRight: 16,
+  },
   label: {
     fontSize: 16,
     color: colors.white,
     fontWeight: "bold",
     marginBottom: 8,
   },
-  content: {
-    paddingLeft: 16,
-    paddingRight: 16,
+  button:{
+    backgroundColor: colors.blue,
+    height:44,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 4,
   },
+  buttonText: {
+    color: colors.white,
+    fontSize:16,
+    fontWeight: 'bold'
+  }
 })

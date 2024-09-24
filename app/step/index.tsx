@@ -14,7 +14,7 @@ import { z } from "zod"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import { router } from "expo-router"
-import { useDataStore } from '../../store/data'
+import { useDataStore } from "../../store/data"
 
 const schema = z.object({
   name: z.string().min(1, { message: "O nome é obrigatório" }),
@@ -34,16 +34,16 @@ export default function Step() {
     resolver: zodResolver(schema),
   })
 
-  const setPageOne = useDataStore( state => state.setPageOne)
+  const setPageOne = useDataStore((state) => state.setPageOne)
 
   function handleCreate(data: FormData) {
-    console.log('Passando dados da Página 1')
+    console.log("Passando dados da Página 1")
 
     setPageOne({
       name: data.name,
       weight: data.weight,
       age: data.age,
-      height: data.height
+      height: data.height,
     })
 
     router.push("/create")
@@ -72,15 +72,6 @@ export default function Step() {
           keyboardTypes="numeric"
         />
 
-        <Text style={styles.label}>Sua idade: </Text>
-        <Input
-          name="age"
-          control={control}
-          placeholder="Ex: 25"
-          error={errors.age?.message}
-          keyboardTypes="numeric"
-        />
-
         <Text style={styles.label}>Sua altura: </Text>
         <Input
           name="height"
@@ -90,7 +81,16 @@ export default function Step() {
           keyboardTypes="numeric"
         />
 
-        <Pressable style={ styles.button} onPress={handleSubmit(handleCreate)}>
+        <Text style={styles.label}>Sua idade: </Text>
+        <Input
+          name="age"
+          control={control}
+          placeholder="Ex: 25"
+          error={errors.age?.message}
+          keyboardTypes="numeric"
+        />
+
+        <Pressable style={styles.button} onPress={handleSubmit(handleCreate)}>
           <Text style={styles.buttonText}>Avançar</Text>
         </Pressable>
       </ScrollView>
@@ -113,16 +113,16 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     marginBottom: 8,
   },
-  button:{
+  button: {
     backgroundColor: colors.blue,
-    height:44,
-    justifyContent: 'center',
-    alignItems: 'center',
+    height: 44,
+    justifyContent: "center",
+    alignItems: "center",
     borderRadius: 4,
   },
   buttonText: {
     color: colors.white,
-    fontSize:16,
-    fontWeight: 'bold'
-  }
+    fontSize: 16,
+    fontWeight: "bold",
+  },
 })
